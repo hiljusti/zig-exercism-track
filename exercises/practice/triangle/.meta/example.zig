@@ -1,6 +1,6 @@
 pub const TriangleError = error {
     Degenerate,
-    InvalidInequality,
+    Invalid,
 };
 
 pub const Triangle = struct {
@@ -13,8 +13,8 @@ pub const Triangle = struct {
         second: f64,
         third: f64
     ) TriangleError!Triangle {
-        try verifyIfDegenerateAttributesExist(first, second, third);
-        try verifyIfTriangleInequalityHolds(first, second, third);
+        try failWhenDegenerate(first, second, third);
+        try failWhenInvalid(first, second, third);
         return Triangle {
             .first = first,
             .second = second,
@@ -22,7 +22,7 @@ pub const Triangle = struct {
         };
     }
 
-    fn verifyIfDegenerateAttributesExist(
+    fn failWhenDegenerate(
         first: f64,
         second: f64,
         third: f64
@@ -34,7 +34,7 @@ pub const Triangle = struct {
         }
     }
 
-    fn verifyIfTriangleInequalityHolds(
+    fn failWhenInvalid(
         first: f64,
         second: f64,
         third: f64
@@ -42,7 +42,7 @@ pub const Triangle = struct {
         if ((first + second < third) or
             (first + third < second) or
             (second + third < first)) {
-            return TriangleError.InvalidInequality;
+            return TriangleError.Invalid;
         }
     }
 
